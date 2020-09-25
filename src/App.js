@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/header.component";
@@ -8,13 +8,13 @@ import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignupPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 
 // bigelow rules (fuente)
-class App extends React.Component {
+class App extends Component{
   constructor() {
     super();
 
     this.state = {
       currentUser: null,
-    };
+    }
   }
 
   unsuscribeFromAuth = null
@@ -22,11 +22,12 @@ class App extends React.Component {
   componentDidMount(){
     this.unsuscribeFromAuth = auth.onAuthStateChanged(user => {
       this.setState({ currentUser: user })
+      console.log(user);
     })
   }
 
   componentWillUnmount(){
-    this.unsuscribeFromAuth()
+    this.unsuscribeFromAuth();
   }
 
   render() {

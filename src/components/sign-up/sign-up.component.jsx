@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
+import { connect } from "react-redux";
+import { signUpStart } from "../../redux/user/user.actions";
 import CustomButton from "../custom-button/custom-button.component";
 import FormInput from "../form-input/form-input.component";
 import "./sign-up.styles.scss";
@@ -27,27 +28,14 @@ class SignUp extends Component {
     e.preventDefault();
 
     const { userDisplayName, userEmail, password, confirmPassword } = this.state;
+    const { signUpStart } = this.props;
 
     if(password !== confirmPassword){
       alert("Passwords don't mach");
       return
     }
 
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(userEmail, password);
-
-      await createUserProfileDocument(user, { userDisplayName });
-
-      this.setState({
-        userDisplayName: "",
-        userEmail: "",
-        password: "",
-        confirmPassword: "",
-      })
-
-    } catch (error) {
-      console.error(error);
-    }
+    signUpStart(userEmail, password, {userDisplayName});
   };
 
   render() {
@@ -96,4 +84,8 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+const mapDispatchToProps = dispatch => ({
+  signUpStart: (email, password, additionalData) => dispatch(signUpStart({email, password, additionalData}))
+})
+
+export default connect(null, mapDispatchToProps)(SignUp);
